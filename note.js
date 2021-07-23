@@ -20,16 +20,13 @@ let algodClient = new algosdk.Algodv2(token, baseServer, port);
     const mnemonic = algosdk.secretKeyToMnemonic(sk_bytes);
 
     var recoveredAccount = algosdk.mnemonicToSecretKey(mnemonic);
-    console.log(recoveredAccount);
 
     function getRandomArbitrary(min, max) {
         return Math.round(Math.random() * (max - min) + min);
     }
 
     let note = `{"id":0,"type":"meteo-station","temperature":${getRandomArbitrary(20, 25)},"humidity":${getRandomArbitrary(0, 100)},"luminosity":${getRandomArbitrary(0, 10)}}`;
-    console.log("");
-    console.log("note: " + note);
-    console.log("");
+
     var lastValid = params.lastRound;
 
     let txn = {
@@ -44,16 +41,12 @@ let algodClient = new algosdk.Algodv2(token, baseServer, port);
         "note": new TextEncoder().encode(note)
     };
 
-    console.log(txn);
-
     let signedTxn = algosdk.signTransaction(txn, recoveredAccount.sk);
-
-    console.log(signedTxn);
 
     let sendTx = await algodClient.sendRawTransaction(signedTxn.blob).do();
 
     console.log("Transaction : " + sendTx.txId);
 
 })().catch(e => {
-    //console.log(e);
+    console.log(e);
 });
